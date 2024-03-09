@@ -1,5 +1,8 @@
 #!/bin/bash
 
+# Get the first command-line argument (the word to append)
+append_word=$1
+
 # Get the remote origin URL
 remote_url=$(git config --get remote.origin.url)
 
@@ -14,6 +17,11 @@ elif [[ "$remote_url" == https://github.com/* ]]; then
 else
   echo "Remote origin does not appear to be a GitHub URL."
   exit 1
+fi
+
+# Append the word if provided
+if [[ ! -z "$append_word" ]]; then
+  remote_url="$remote_url/$append_word"
 fi
 
 # Output the GitHub link
