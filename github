@@ -1,0 +1,29 @@
+#!/bin/bash
+
+# Get the remote origin URL
+remote_url=$(git config --get remote.origin.url)
+
+# Check if the URL is an SSH URL
+if [[ "$remote_url" == git@github.com:* ]]; then
+  # Convert SSH URL to HTTPS format
+  remote_url=${remote_url/git@github.com:/https://github.com/}
+  remote_url=${remote_url/.git/}
+elif [[ "$remote_url" == https://github.com/* ]]; then
+  # Remove the .git extension from HTTPS URL if present
+  remote_url=${remote_url/.git/}
+else
+  echo "Remote origin does not appear to be a GitHub URL."
+  exit 1
+fi
+
+# Output the GitHub link
+echo "GitHub link: $remote_url"
+
+# Detect the operating system and open the GitHub link in the default web browser
+if [[ "$OSTYPE" == "linux-gnu"* ]]; then
+    xdg-open "$remote_url"
+elif [[ "$OSTYPE" == "darwin"* ]]; then
+    open "$remote_url"
+else
+    echo "Unsupported OS for auto-opening the URL."
+fi
